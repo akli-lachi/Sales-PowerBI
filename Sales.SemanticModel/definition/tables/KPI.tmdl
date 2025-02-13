@@ -1,0 +1,36 @@
+table KPI
+	lineageTag: 0056045d-dfae-4294-b508-96de79a7b901
+
+	measure 'Total Transactions' = ```
+			COUNT(Sales[sale_id])
+			
+			```
+		formatString: 0
+		lineageTag: 094190d6-e0fc-4acd-9b87-43e6c6900594
+
+	measure Quantity = ```
+			SUM(Sales[quantity])
+			
+			```
+		formatString: 0
+		lineageTag: 742b1fde-50d0-4c05-a4ba-d8f2b4724d02
+
+	measure 'Total Sales' = ```
+			SUMX(Sales, Sales[quantity] * Sales[price])
+			
+			```
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		lineageTag: 51b19064-37ba-4bbb-9584-645e936b3215
+
+	partition KPI = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Colonne 1" = _t]),
+				    #"Type modifié" = Table.TransformColumnTypes(Source,{{"Colonne 1", type text}}),
+				    #"Colonnes supprimées" = Table.RemoveColumns(#"Type modifié",{"Colonne 1"})
+				in
+				    #"Colonnes supprimées"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,54 @@
+table Customer
+	lineageTag: a25f761b-c5d8-49cb-add0-f0337f0473f5
+
+	column customer_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 866155cf-f5de-4628-b2c5-3c5da3c5193c
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_name
+		dataType: string
+		lineageTag: 455691ef-24ac-485a-b5fd-0a70356b7e07
+		summarizeBy: none
+		sourceColumn: customer_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 7bb7a9b2-9082-4e94-8692-9b82f163fea1
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column registration_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 37524637-6d09-4951-861a-386a02bbbc74
+		summarizeBy: none
+		sourceColumn: registration_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Customer = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("LACHI\SQL2022"),
+				    db_revision_generale = Source{[Name="db_revision_generale"]}[Data],
+				    ods_dim_customer = db_revision_generale{[Schema="ods",Item="dim_customer"]}[Data],
+				    #"Colonnes supprimées" = Table.RemoveColumns(ods_dim_customer,{"ods.fact_sales"})
+				in
+				    #"Colonnes supprimées"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,16 @@
+relationship f76d3ad4-4ead-4613-b20b-c9bb4313e3ac
+	fromColumn: Sales.customer_id
+	toColumn: Customer.customer_id
+
+	annotation PBI_IsFromSource = FS
+
+relationship 39112617-445b-49c2-ae07-5b4c51edf4c0
+	fromColumn: Sales.product_id
+	toColumn: Product.product_id
+
+	annotation PBI_IsFromSource = FS
+
+relationship 7c6702c4-cda1-6a2f-b9f4-1301a14e529c
+	fromColumn: Sales.sale_date
+	toColumn: dattum.Date
+

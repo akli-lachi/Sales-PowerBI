@@ -1,0 +1,84 @@
+table Sales
+	lineageTag: da154736-5398-4826-aa6b-560180ce9d73
+
+	column sale_id
+		dataType: int64
+		formatString: 0
+		lineageTag: bd59d367-ed8f-40e5-9e34-364f7f8e8dd5
+		summarizeBy: none
+		sourceColumn: sale_id
+
+		annotation SummarizationSetBy = User
+
+	column product_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9a2d8d74-fc83-43f9-8fd6-57a66b5ecf84
+		summarizeBy: none
+		sourceColumn: product_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3613677c-eb73-452e-94cc-30f38013b443
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column sale_date
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: ee112a78-7ab8-415e-912f-bb527197b29e
+		summarizeBy: none
+		sourceColumn: sale_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: f67b582d-2087-4fe1-9890-411d18adf327
+		summarizeBy: none
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = User
+
+	column price
+		dataType: double
+		lineageTag: d8d12545-bda5-4678-8f17-74d92fb0a63c
+		summarizeBy: none
+		sourceColumn: price
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Sales = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("LACHI\SQL2022"),
+				    db_revision_generale = Source{[Name="db_revision_generale"]}[Data],
+				    ods_fact_sales = db_revision_generale{[Schema="ods",Item="fact_sales"]}[Data],
+				    #"Colonnes supprimées" = Table.RemoveColumns(ods_fact_sales,{"ods.dim_customer", "ods.dim_product"})
+				in
+				    #"Colonnes supprimées"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
