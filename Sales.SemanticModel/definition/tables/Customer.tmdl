@@ -26,17 +26,6 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
-	column registration_date
-		dataType: dateTime
-		formatString: Long Date
-		lineageTag: 37524637-6d09-4951-861a-386a02bbbc74
-		summarizeBy: none
-		sourceColumn: registration_date
-
-		annotation SummarizationSetBy = Automatic
-
-		annotation UnderlyingDateTimeDataType = Date
-
 	partition Customer = m
 		mode: import
 		source =
@@ -44,7 +33,7 @@ table Customer
 				    Source = Sql.Databases("LACHI\SQL2022"),
 				    db_revision_generale = Source{[Name="db_revision_generale"]}[Data],
 				    ods_dim_customer = db_revision_generale{[Schema="ods",Item="dim_customer"]}[Data],
-				    #"Colonnes supprimées" = Table.RemoveColumns(ods_dim_customer,{"ods.fact_sales"})
+				    #"Colonnes supprimées" = Table.RemoveColumns(ods_dim_customer,{"ods.fact_sales", "registration_date"})
 				in
 				    #"Colonnes supprimées"
 

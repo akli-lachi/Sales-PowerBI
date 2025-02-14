@@ -67,6 +67,15 @@ table Sales
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	column Année
+		dataType: int64
+		formatString: 0
+		lineageTag: 2295cc87-a537-4442-807c-1aad87c9d932
+		summarizeBy: sum
+		sourceColumn: Année
+
+		annotation SummarizationSetBy = Automatic
+
 	partition Sales = m
 		mode: import
 		source =
@@ -74,9 +83,10 @@ table Sales
 				    Source = Sql.Databases("LACHI\SQL2022"),
 				    db_revision_generale = Source{[Name="db_revision_generale"]}[Data],
 				    ods_fact_sales = db_revision_generale{[Schema="ods",Item="fact_sales"]}[Data],
-				    #"Colonnes supprimées" = Table.RemoveColumns(ods_fact_sales,{"ods.dim_customer", "ods.dim_product"})
+				    #"Colonnes supprimées" = Table.RemoveColumns(ods_fact_sales,{"ods.dim_customer", "ods.dim_product"}),
+				    #"Année insérée" = Table.AddColumn(#"Colonnes supprimées", "Année", each Date.Year([sale_date]), Int64.Type)
 				in
-				    #"Colonnes supprimées"
+				    #"Année insérée"
 
 	annotation PBI_NavigationStepName = Navigation
 
